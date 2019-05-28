@@ -1,30 +1,46 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using VirtualServer.DB;
+using VirtualServer.Models;
 
 namespace VirtualServer.Controllers
 {
     public class HomeController : Controller
     {
+
         public ActionResult Index()
         {
             return View();
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
 
-            return View();
+        public JsonResult GetData()
+        {
+            var data = DataProvider.espioProvider.GetDictData();
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
 
-            return View();
+        [HttpPost]
+        public JsonResult UpdateData(string dataForUpdate)
+        {
+            var dataForUpdateDes = (List<DictDataModel>)JsonConvert.DeserializeObject(dataForUpdate, typeof(List<DictDataModel>));
+            var data = DataProvider.espioProvider.UpdateData(dataForUpdateDes);
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+
+        [HttpPost]
+        public JsonResult CreateRow()
+        {
+            var data = DataProvider.espioProvider.CreateRow();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
