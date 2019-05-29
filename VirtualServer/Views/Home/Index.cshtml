@@ -5,7 +5,7 @@
 <div id="app" v-cloak>
 
 
-    <button v-on:click="createRow">AddNewServer</button>
+    <button v-on:click="createRow">Add</button>
     <button v-on:click="items=updateData()">Remove</button>
     <div class="container-fluid">
         <div class="form-group form-inline">
@@ -13,7 +13,7 @@
                 <tbody>
                     <tr>
                         <td> <span>CurrentDateTime</span></td>
-                        <td><span>{{TotalUsageTime}}</span></td>
+                        <td><span>{{CurrentDateTime}}</span></td>
                         <td></td>
                         <td></td>
                     </tr>
@@ -53,8 +53,8 @@
                 <tbody>
                     <tr v-for="item in items">
                         <td><span>{{ item.VirtualServerId }}</span> </td>
-                        <td><span>{{ formatDate(item.CreateDateTime) }}</span> </td>
-                        <td><span>{{ formatDate(item.RemoveDateTime) }}</span> </td>
+                        <td><span>{{ formatDate(item.CreateDateTime)}}</span> </td>
+                        <td><span>{{ formatDate(item.RemoveDateTime)}}</span> </td>
                         <td><input type="checkbox" v-model="item.deleteFlag" /></td>
                     </tr>
                 </tbody>

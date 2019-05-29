@@ -15,7 +15,9 @@ window.vm = new Vue({
             loading: true,
             errored: false,
             CurrentDateTime: '',
-            TotalUsageTime: ''
+            TotalUsageTime: '',
+            StartTime: new Date(new Date().setHours(0, 0, 0, 0)),
+            UsageSecondsFromDB: 0
         };
 
     },
@@ -23,10 +25,12 @@ window.vm = new Vue({
         axios
             .get(baseUrl + "Home/GetData")
             .then(response => {
-                this.items = response.data.map(elem => function () {
+                this.items = response.data.DictData.map(elem => function () {
                     return elem;
                 }());
-
+                this.UsageSecondsFromDB = response.data.UsageSecondsFromDB;
+                this.StartTime = new Date(window.vm.StartTime.getTime() + response.data.UsageSecondsFromDB * 1000);
+                this.TotalUsageTime = moment(this.StartTime.getHours() + ':' + this.StartTime.getMinutes() + ':' + this.StartTime.getSeconds(), 'hh:m:ss').format('HH:mm:ss');
             })
             .catch(error => {
                 console.log(error);
@@ -69,8 +73,8 @@ window.vm = new Vue({
 
         },
         formatDate: function (value) {
-            if (value) {
-                return moment(String(value), 'DD.MM.YYYY HH:mm:ss').format('YYYY-MM-DD HH:mm:ss');
+            if (value && (value.indexOf('-62135596800000') == -1)) {
+                return moment(String(new Date(parseInt(value.substr(6))))).format('YYYY-MM-DD HH:mm:ss');
             }
         }
 
@@ -78,10 +82,17 @@ window.vm = new Vue({
 });
 
 var timerID = setInterval(updateTime, 1000);
-updateTime();
+
 function updateTime() {
-    var cd = new Date();
-    window.vm.TotalUsageTime = moment(cd.getHours() + ':' + cd.getMinutes() + ':' + cd.getSeconds(), 'hh:m:ss').format('HH:mm:ss');
+    if (window.vm.items) {
+        if (window.vm.items.filter(x => x.RemoveDateTime.indexOf('-62135596800000') != -1).length > 0) {
+            window.vm.StartTime = new Date(window.vm.StartTime.getTime() + 1000);
+            window.vm.TotalUsageTime = moment(window.vm.StartTime.getHours() + ':' + window.vm.StartTime.getMinutes() + ':' + window.vm.StartTime.getSeconds(), 'hh:m:ss').format('HH:mm:ss');
+        }
+    }
+    
+    var CurrDate = new Date();
+    window.vm.CurrentDateTime = moment(CurrDate).format('YYYY-MM-DD HH:mm:ss');   
 };
 
 

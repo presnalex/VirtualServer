@@ -8,8 +8,8 @@ namespace VirtualServer.Models
     public class DictDataModel
     {
         public int VirtualServerId { get; set; }
-        public string CreateDateTime { get; set; }
-        public string RemoveDateTime { get; set; }
+        public DateTime CreateDateTime { get; set; }
+        public DateTime RemoveDateTime { get; set; }
         public bool DeleteFlag { get; set; }
     }
 }

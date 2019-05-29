@@ -38,12 +38,18 @@ namespace VirtualServer.DB
             var list1 = rows.Select(row => new DictDataModel
             {
                 VirtualServerId = DbConnector.GetValue<int>(row["VirtualServerId"]),
-                CreateDateTime = DbConnector.GetValue<string>(row["CreateDateTime"]),
-                RemoveDateTime = DbConnector.GetValue<string>(row["RemoveDateTime"])
+                CreateDateTime = DbConnector.GetValue<DateTime>(row["CreateDateTime"]),
+                RemoveDateTime = DbConnector.GetValue<DateTime>(row["RemoveDateTime"])
             }).ToList();
             return list1;
         }
 
+        public int GetUsageSecondsFromDB()
+        {
+            var rows = Db.GetValues("pVirtualServerGetUsage", new QueryParams("CurrDateTime", DateTime.Now));
+            return rows.Select(row => DbConnector.GetValue<int>(row["UsageSecondsFromDB"])).ToList().FirstOrDefault();
+
+        }
 
         public List<DictDataModel> UpdateData(IEnumerable<DictDataModel> data)
         {
