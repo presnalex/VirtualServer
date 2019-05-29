@@ -20,7 +20,9 @@ namespace VirtualServer.Controllers
 
         public JsonResult GetData()
         {
-            var data = DataProvider.espioProvider.GetDictData();
+            var data = new DataModel();
+            data.DictData = DataProvider.espioProvider.GetDictData();
+            data.UsageSecondsFromDB = DataProvider.espioProvider.GetUsageSecondsFromDB();
 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
